@@ -2,11 +2,11 @@
 #include "Arduino.h"
 
 // 8-bit unsigned integer (Lagrer tall fra 0 til 255, 1 byte i størrelse)
-using u8 = unsigned char;
+using Pin = unsigned char;
 
 class Ultrasound {
-    u8 trigger_pin { };
-    u8 echo_pin { };
+    Pin trigger_pin { };
+    Pin echo_pin { };
     unsigned int duration { };
     float distance { };
 
@@ -25,7 +25,7 @@ class Ultrasound {
         }
     }
 public:
-    Ultrasound(u8 TRIGGER_PIN, u8 ECHO_PIN) 
+    Ultrasound(Pin TRIGGER_PIN, Pin ECHO_PIN) 
     : trigger_pin { TRIGGER_PIN }, echo_pin { ECHO_PIN } {
         pinMode(trigger_pin, OUTPUT);
         digitalWrite(trigger_pin, LOW);
