@@ -5,8 +5,11 @@ using Pin = unsigned char; // Unsigned 8-bit integer, kan large fra 0-255 i verd
 
 
 
+
+
 class Bil {
-    
+   
+
 
 public:
     Bil();
