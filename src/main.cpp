@@ -38,38 +38,45 @@ void setup() {
 }
 
 constexpr float wheel_radius = 0.078/2;
-constexpr float wheel_RPM { };
+constexpr float wheel_RPM { 35 };
 constexpr float wheel_to_wheel_len = 0.12; 
 constexpr float velocity = wheel_RPM * (2 * M_PI * wheel_radius)/60;
-constexpr int time_to_rotate(float degree_radians) { return (degree_radians*wheel_to_wheel_len)/(2*velocity); }
+constexpr float time_to_rotate(float degree_radians) { return (degree_radians*wheel_to_wheel_len)/(2*velocity); }
 
 void loop() {
     float distance = sensor.measure_distance();
     Serial.print("Distansen er: ");
     Serial.println(distance);
     if (distance > 20.0) {
-        Serial.println("ttt");
         forward(motor1, motor2);
     } 
     // Sjekk området rundt for nye kjøreretninger
     else {
-        // Snu til høyre for å sjekke om 
-        right(motor1, motor2, 100);
-        delay(time_to_rotate(M_PI/2));
         brake(motor1, motor2);
+        delay(1000);
+        // Snu til høyre for å sjekke om 
+        right(motor1, motor2, 255);
+
+        Serial.print("Rotasjonstid: ");
+        Serial.println(time_to_rotate(M_PI/2));
+
+        delay(time_to_rotate(M_PI/2) * 1000);
+        brake(motor1, motor2);
+        delay(1000);
         
         // Er det ledig forran? Ja, gå til neste loop, nei(else), snu -180 grader
         if (sensor.measure_distance() > 20.0) {}
         else {
-            left(motor1, motor2, 100);
-            delay(time_to_rotate(M_PI));
+            left(motor1, motor2, 255);
+            delay(time_to_rotate(M_PI) * 1000);
             brake(motor1, motor2);
+            delay(1000);
 
             // Er det ledig forran? Ja, gå til neste loop, nei(else), kjøre tilbake mot orginal retning
             if (sensor.measure_distance() > 20.0) {}
             else {
-                left(motor1, motor2, 100);
-                delay(time_to_rotate(M_PI/2));
+                left(motor1, motor2, 255);
+                delay(time_to_rotate(M_PI/2) * 1000);
                 brake(motor1, motor2);
             }
         }
