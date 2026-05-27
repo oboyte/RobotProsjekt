@@ -15,6 +15,7 @@ class Ultrasound {
         delayMicroseconds(10);
         digitalWrite(trigger_pin, LOW);
     }
+    
     int get_distanse() {
         duration = pulseIn(echo_pin, HIGH);
         

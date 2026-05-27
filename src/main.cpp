@@ -6,9 +6,11 @@
 
 using Pin = unsigned char; // Unsigned 8-bit integer, kan large fra 0-255 i verdi.
 
+constexpr float STOP_DISTANCE = 40;
+
 namespace UltraS_Pins {
-    constexpr Pin trigger = 16;
-    constexpr Pin echo = 17;
+    constexpr Pin trigger = 18;
+    constexpr Pin echo = 19;
 }
 namespace Motor_Pins {
     constexpr Pin A_IN1 = 27;
@@ -38,17 +40,17 @@ void setup() {
 }
 
 constexpr float wheel_radius = 0.078/2;
-constexpr float wheel_RPM { 35 };
+constexpr float wheel_RPM { 25 };
 constexpr float wheel_to_wheel_len = 0.12; 
 constexpr float velocity = wheel_RPM * (2 * M_PI * wheel_radius)/60;
 constexpr float time_to_rotate(float degree_radians) { return (degree_radians*wheel_to_wheel_len)/(2*velocity); }
 
 void loop() {
-    float distance = sensor.measure_distance();
+    auto distance = sensor.measure_distance();
     Serial.print("Distansen er: ");
     Serial.println(distance);
-    if (distance > 20.0) {
-        forward(motor1, motor2);
+    if (distance > STOP_DISTANCE || distance == -1.0) { // Sjekk om avstanden er > 20cm eller om avstanden har fått timeout (vanligvis > 3m)
+        forward(motor1, motor2, 150);
     } 
     // Sjekk området rundt for nye kjøreretninger
     else {
@@ -65,7 +67,8 @@ void loop() {
         delay(1000);
         
         // Er det ledig forran? Ja, gå til neste loop, nei(else), snu -180 grader
-        if (sensor.measure_distance() > 20.0) {}
+        distance = sensor.measure_distance();
+        if (distance > STOP_DISTANCE || distance == -1.0) {}
         else {
             left(motor1, motor2, 255);
             delay(time_to_rotate(M_PI) * 1000);
@@ -73,7 +76,8 @@ void loop() {
             delay(1000);
 
             // Er det ledig forran? Ja, gå til neste loop, nei(else), kjøre tilbake mot orginal retning
-            if (sensor.measure_distance() > 20.0) {}
+            distance = sensor.measure_distance();
+            if (sensor.measure_distance() > STOP_DISTANCE || distance == -1.0) {}
             else {
                 left(motor1, motor2, 255);
                 delay(time_to_rotate(M_PI/2) * 1000);
