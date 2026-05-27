@@ -40,7 +40,7 @@ void setup() {
 }
 
 constexpr float wheel_radius = 0.078/2;
-constexpr float wheel_RPM { 25 };
+constexpr float wheel_RPM { 20 };
 constexpr float wheel_to_wheel_len = 0.12; 
 constexpr float velocity = wheel_RPM * (2 * M_PI * wheel_radius)/60;
 constexpr float time_to_rotate(float degree_radians) { return (degree_radians*wheel_to_wheel_len)/(2*velocity); }
@@ -49,6 +49,7 @@ void loop() {
     auto distance = sensor.measure_distance();
     Serial.print("Distansen er: ");
     Serial.println(distance);
+
     if (distance > STOP_DISTANCE || distance == -1.0) { // Sjekk om avstanden er > 20cm eller om avstanden har fått timeout (vanligvis > 3m)
         forward(motor1, motor2, 150);
     } 
@@ -56,34 +57,18 @@ void loop() {
     else {
         brake(motor1, motor2);
         delay(1000);
-        // Snu til høyre for å sjekke om 
-        right(motor1, motor2, 255);
-
-        Serial.print("Rotasjonstid: ");
-        Serial.println(time_to_rotate(M_PI/2));
-
-        delay(time_to_rotate(M_PI/2) * 1000);
-        brake(motor1, motor2);
-        delay(1000);
         
-        // Er det ledig forran? Ja, gå til neste loop, nei(else), snu -180 grader
-        distance = sensor.measure_distance();
-        if (distance > STOP_DISTANCE || distance == -1.0) {}
-        else {
-            left(motor1, motor2, 255);
-            delay(time_to_rotate(M_PI) * 1000);
-            brake(motor1, motor2);
-            delay(1000);
+        Serial.println("Reached checkpoint 1");
 
-            // Er det ledig forran? Ja, gå til neste loop, nei(else), kjøre tilbake mot orginal retning
-            distance = sensor.measure_distance();
-            if (sensor.measure_distance() > STOP_DISTANCE || distance == -1.0) {}
-            else {
-                left(motor1, motor2, 255);
-                delay(time_to_rotate(M_PI/2) * 1000);
-                brake(motor1, motor2);
-            }
-        }
+        left(motor1, motor2, 255);
+        delay(time_to_rotate(M_PI/2) * 1000);
+
+        Serial.println("Reached checkpoint 2");
+
+        brake(motor1, motor2);
+        delay(2000);
+
+        Serial.println("Reached checkpoint 3");
     }
     delay(100);
 }
