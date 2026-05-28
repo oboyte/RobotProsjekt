@@ -15,8 +15,8 @@ namespace UltraS_Pins {
 namespace Motor_Pins {
     constexpr Pin A_IN1 = 27;
     constexpr Pin A_IN2 = 14;
-    constexpr Pin B_IN1 = 32;
-    constexpr Pin B_IN2 = 33;
+    constexpr Pin B_IN1 = 33;
+    constexpr Pin B_IN2 = 32;
 
     constexpr Pin STBY = 26;
 

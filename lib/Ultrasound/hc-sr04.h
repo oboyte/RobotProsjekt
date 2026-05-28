@@ -17,7 +17,7 @@ class Ultrasound {
     }
     
     int get_distanse() {
-        duration = pulseIn(echo_pin, HIGH);
+        duration = pulseIn(echo_pin, HIGH); // Måler tid til linjen blir høy
         
         // Timeout, out of range
         if(duration>=38000) return -1;
