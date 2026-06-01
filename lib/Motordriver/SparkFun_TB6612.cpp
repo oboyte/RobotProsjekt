@@ -53,7 +53,6 @@ void Motor::fwd(int speed)
    digitalWrite(In1, HIGH);
    digitalWrite(In2, LOW);
    analogWrite(PWM, speed);
-
 }
 
 void Motor::rev(int speed)
