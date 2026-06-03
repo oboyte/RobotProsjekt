@@ -40,20 +40,18 @@ void setup() {
 }
 
 constexpr float wheel_radius = 0.078/2;
-constexpr float wheel_RPM { 40 };
+constexpr float wheel_RPM { 43 };
 constexpr float wheel_to_wheel_len = 0.12; 
 constexpr float velocity = wheel_RPM * (2 * M_PI * wheel_radius)/60;
-constexpr float time_to_rotate(float degree_radians) { return (degree_radians*wheel_to_wheel_len)/(2*velocity); }
+constexpr float time_to_rotate(float degree_radians) { 
+    return (degree_radians*wheel_to_wheel_len)/(2*velocity); 
+}
 
 void loop() {
     auto distance = sensor.measure_distance();
-    Serial.print("Distansen er: ");
-    Serial.println(distance);
-
-    if (distance > STOP_DISTANCE || distance == -1.0) { // Sjekk om avstanden er > 20cm eller om avstanden har fått timeout (vanligvis > 3m)
+    if (distance > STOP_DISTANCE || distance == -1.0) { // Sjekk om avstanden er større STOP_DISTANCE eller om avstanden har fått timeout (vanligvis > 3m)
         forward(motor1, motor2, 100);
-    } 
-    else { // Sjekk området rundt for nye kjøreretninger
+    } else { // Sjekk området rundt for nye kjøreretninger
         brake(motor1, motor2);
         delay(1000);
         left(motor1, motor2, 255);
